@@ -1,0 +1,20 @@
+2.1:
+	passed: 5
+	failed: 5
+	failed tests:
+		2.1/input1
+		2.1/input2
+		2.1/input3
+		2.1/input4
+		2.1/input5
+
+
+2.2:
+	passed: 0
+	failed: 0
+	failed tests:
+
+
+Test Submission Score (out of 5): 2.5
+Test Run Score (out of 5): 2
+Assignment Score (out of 10): 4.5

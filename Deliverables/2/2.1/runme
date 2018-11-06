@@ -1,0 +1,2 @@
+# !/bin/bash
+python ../../../src/two-one.py 

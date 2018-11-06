@@ -1,0 +1,16 @@
+[[0,0],[0,4]]
+[["white1", ["N","E"]],
+["white1", ["N","W"]],
+["white1", ["N","SW"]],
+["white1", ["N","S"]],
+["white1", ["NE"]],
+["white1", ["W","N"]],
+["white1", ["W","NE"]],
+["white1", ["W","E"]],
+["white1", ["NW","E"]],
+["white1", ["NW","SE"]],
+["white1", ["NW","S"]],
+["white2", ["N","S"]],
+["white2", ["N","SW"]],
+["white2", ["N","W"]],
+["white2", ["N","N"]]]
