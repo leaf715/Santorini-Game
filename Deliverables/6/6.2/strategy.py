@@ -50,12 +50,13 @@ class Strategy:
         # viable_plays = filter(lambda p: not self._is_losing_play(color, p, board), valid_plays)
         original_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
         bad_plays = []
-        for og_move in original_plays:
-            moves = [og_move]
-            possible_boards = []
-            for i in range(self.rounds):
-                for move in moves:
-                    if
+        for og_play in original_plays:
+            new_board = [og_play.resulting_board(board)]
+            if not self.check_future(color, new_board, 1):
+                bad_plays.append(og_play)
+        good_plays = filter(lambda p: p not in bad_plays, original_plays)
+        return good_plays
+
 
     def generate_opponent_boards(self, board, color):
         worker1 = self._opponent_color(color) + '1'
