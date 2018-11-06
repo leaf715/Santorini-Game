@@ -60,6 +60,3 @@ class RuleChecker:
       return False
 
 rule_checker = RuleChecker()
-# rule_checker._is_winner(None, 'whie1')
-# rule_checker._basic_necessities(None,None,'NM')
-# Play('white1', 'N')

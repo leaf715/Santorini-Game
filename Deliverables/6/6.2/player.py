@@ -1,5 +1,6 @@
 from board import Board, Position
 from RuleChecker import RuleChecker, Play
+import strategy
 
 class Player:
 

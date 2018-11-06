@@ -1,10 +1,14 @@
 from board import Board, Position
 from RuleChecker import RuleChecker, Play
+import json
 
 class Strategy:
 
     def __init__(self):
         self.rules = RuleChecker()
+        cfg_file = open('strategy.config', 'r')
+        cfg = json.loads(cfg_file.read())
+        self.rounds = cfg['look-ahead']
 
     def _opponent_color(self, color):
         return 'white' if color == 'blue' else 'blue'
@@ -42,6 +46,22 @@ class Strategy:
         worker2 = color + '2'
         plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
 
-        valid_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
-        viable_plays = filter(lambda p: not self._is_losing_play(color, p, board), valid_plays)
-        return viable_plays
+        # valid_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
+        # viable_plays = filter(lambda p: not self._is_losing_play(color, p, board), valid_plays)
+        original_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
+        bad_plays = []
+        for og_move in original_plays:
+            moves = [og_move]
+            possible_boards = []
+            for i in range(self.rounds):
+                for move in moves:
+                    if
+
+    def generate_opponent_boards(self, board, color):
+        worker1 = self._opponent_color(color) + '1'
+        worker2 = self._opponent_color(color) + '2'
+        plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
+        boards = []
+        for play in plays:
+            boards.append(play.resulting_board(board))
+        return boards
