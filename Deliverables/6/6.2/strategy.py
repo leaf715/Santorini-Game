@@ -46,47 +46,63 @@ class Strategy:
         worker2 = color + '2'
         plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
 
-        # valid_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
-        # viable_plays = filter(lambda p: not self._is_losing_play(color, p, board), valid_plays)
         original_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
         bad_plays = []
         for og_play in original_plays:
-            new_board = [og_play.resulting_board(board)]
-            if not self.check_future(color, new_board, 1):
+            new_board = og_play.resulting_board(board)
+            if self.check_future_loss(color, new_board, 1):
                 bad_plays.append(og_play)
         good_plays = filter(lambda p: p not in bad_plays, original_plays)
         return good_plays
 
-def check_future(color, board, round):
-    enemy_worker1 = self._opponent_color(color) + '1'
-    enemy_worker2 = self._opponent_color(color) + '2'
-    opponent_wins = _worker_will_win(self, enemy_worker1, board) or _worker_will_win(self, enemy_worker2, board)
+    def check_future_loss(self, color, board, round):
+        if self.game_over(board,color):
+            return False
+        enemy_worker1 = self._opponent_color(color) + '1'
+        enemy_worker2 = self._opponent_color(color) + '2'
+        opponent_wins = self._worker_will_win(enemy_worker1, board) or self._worker_will_win(enemy_worker2, board)
+        if opponent_wins:
+            return True
 
-    if opponent_wins:
-        #right now should be set to false
-        return True
-    
-    new_boards = generate_opponent_boards(self, board, self._opponent_color(color))
-    round += 1
-    if round <= rounds:
-        for b in new_boards:
-            plays = self._all_possible_plays(worker1, b) + self._all_possible_plays(worker2, b)
-            new_plays = filter(lambda p: self.rules.is_valid_play(b, p), plays)
-            for play in new_plays:
-                next_board = play.resulting_board(b)
-                self.check_future(color, next_board, round)
-
-    return false
+        round = round + 1
+        if round <= self.rounds:
+            new_boards = self.generate_opponent_boards(board, color)
+            for b in new_boards:
+                plays = self._all_possible_plays(color+'1', b) + self._all_possible_plays(color+'2', b)
+                new_plays = filter(lambda p: self.rules.is_valid_play(b, p), plays)
+                all_winning_plays = True
+                for play in new_plays:
+                    next_board = play.resulting_board(b)
+                    if not self.game_over(next_board,color):
+                        # print round
+                        # print next_board
+                        all_winning_plays = False
+                        break;
+                if all_winning_plays:
+                    return False
+                for play in new_plays:
+                    next_board = play.resulting_board(b)
+                    if self.check_future_loss(color, next_board, round):
+                        return True
+        return False
 
 
     def generate_opponent_boards(self, board, color):
         worker1 = self._opponent_color(color) + '1'
         worker2 = self._opponent_color(color) + '2'
         plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
+        new_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
         boards = []
-        for play in plays:
+        for play in new_plays:
             boards.append(play.resulting_board(board))
         return boards
+
+    def game_over(self, board,color):
+        workers = [color+'1',color+'2']
+        for worker in workers:
+            if board.get_worker_height(worker) == 3:
+                return True
+        return False
 
 
 #pytest
