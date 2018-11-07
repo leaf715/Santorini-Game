@@ -57,6 +57,27 @@ class Strategy:
         good_plays = filter(lambda p: p not in bad_plays, original_plays)
         return good_plays
 
+def check_future(color, board, round):
+    enemy_worker1 = self._opponent_color(color) + '1'
+    enemy_worker2 = self._opponent_color(color) + '2'
+    opponent_wins = _worker_will_win(self, enemy_worker1, board) or _worker_will_win(self, enemy_worker2, board)
+
+    if opponent_wins:
+        #right now should be set to false
+        return True
+    
+    new_boards = generate_opponent_boards(self, board, self._opponent_color(color))
+    round += 1
+    if round <= rounds:
+        for b in new_boards:
+            plays = self._all_possible_plays(worker1, b) + self._all_possible_plays(worker2, b)
+            new_plays = filter(lambda p: self.rules.is_valid_play(b, p), plays)
+            for play in new_plays:
+                next_board = play.resulting_board(b)
+                self.check_future(color, next_board, round)
+
+    return false
+
 
     def generate_opponent_boards(self, board, color):
         worker1 = self._opponent_color(color) + '1'
@@ -66,3 +87,6 @@ class Strategy:
         for play in plays:
             boards.append(play.resulting_board(board))
         return boards
+
+
+#pytest
