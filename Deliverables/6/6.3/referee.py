@@ -11,10 +11,10 @@ class Referee:
     # object so it knows what plays are valid and what are not
     def __init__(self):
         self.rule_checker = RuleChecker()
-        self.turn = "blue"
+        self.turn = 'blue'
         self.name_to_color = {}
-        self.board = Board([[0, 0, 0, 0, 0][0, 0, 0, 0, 0][0, 0, 0, 0, 0]
-                            [0, 0, 0, 0, 0][0, 0, 0, 0, 0]])
+        self.board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
+                            [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
     def create_player(self, name):
         if self.turn == 'blue':
@@ -33,23 +33,27 @@ class Referee:
         worker2 = self.turn + '2'
         worker1_Pos = Position(coord1[0], coord1[1])
         worker2_Pos = Position(coord2[0], coord2[1])
+        if not self.board._is_in_bounds(worker1_Pos) or not self.board._is_in_bounds(worker2_Pos):
+            return self._opponent_wins(self.turn)
+        if self.board.is_cell_occupied(worker1_Pos) or self.board.is_cell_occupied(worker2_Pos):
+            return self._opponent_wins(self.turn)
+
         self.board.worker_locations[worker1] = worker1_Pos
         self.board.worker_locations[worker2] = worker2_Pos
+        self.turn = self._opponent_color(self.turn)
         return self.board
     # Takes a play given to it by a player and tells the player they lose if it is
     # not a legal play and tells the other player they won
 
-    def check_play(self, worker, direction1, direction2):
+    def check_play(self, worker, directions):
         # checks if its valid play
-        play = Play(worker, direction1, direction2)
-        if self.turn != self.get_player_color(worker):
-            winner_color = self._opponent_color(self.get_player_color(play))
-            return self.name_to_color[winner_color]
+        if len(directions) < 2:
+            directions.append(None)
+        play = Play(worker, directions[0], directions[1])
 
         is_legal = self.rule_checker.is_valid_play(self.board, play)
-        if not is_legal:
-            winner_color = self._opponent_color(self.get_player_color(play))
-            return self.name_to_color[winner_color]
+        if not is_legal or self.turn != self.get_player_color(play):
+            return self._opponent_wins(self.turn)
 
         self.board.move_worker(play.worker, play.move_direction)
         if play.build_direction:
@@ -66,4 +70,10 @@ class Referee:
         return play.worker[: -1]
 
     def _opponent_color(self, color):
-        return 'white' if color == 'blue' else 'blue'
+        if color == 'blue':
+            return 'white'
+        return 'blue'
+
+    def _opponent_wins(self, color):
+        winner_color = self._opponent_color(color)
+        return self.name_to_color[winner_color]
