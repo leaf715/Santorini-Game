@@ -63,9 +63,6 @@ class Referee:
         else:
             return self.name_to_color[self.turn]
 
-    def did_play_win(self, worker):
-        self.rule_checker._is_winner(self.board, worker)
-
     def get_player_color(self, play):
         return play.worker[: -1]
 
