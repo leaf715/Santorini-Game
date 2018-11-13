@@ -28,11 +28,11 @@ class RuleChecker:
 
     WINNING_HEIGHT = 3
 
-    def validate_initial_board(board, player_color):
+    def validate_initial_board(self, board, player_color):
 
-        if len(board.worker_locations) != 0 or len(board.worker_locations) != 2:
+        if len(board.worker_locations) != 0 and len(board.worker_locations) != 2:
             return False
-        if np.sum(board) != 0:
+        if np.sum(board.height_grid) != 0:
             return False
         if len(board.worker_locations) == 2:
             opponent_worker_names = []
@@ -55,13 +55,15 @@ class RuleChecker:
 
         return True
 
-    def validate_board(board):
-        if not np.all(0 <= board <= 4):
-            return False
+    def validate_board(self, board):
+        for row in board.height_grid:
+            for cell in row:
+                if cell < 0 or cell > 4:
+                    return False
         for worker in board.worker_locations.keys():
-            if board._get_cell_height(board.worker_locations[worker]) > 2:
+            if board._get_cell_height(board.worker_locations[worker]) > 3:
                 return False
-        if len(board.workers_locations) != 4:
+        if len(board.worker_locations) != 4:
             return False
         return True
 

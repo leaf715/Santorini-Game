@@ -41,6 +41,16 @@ class Strategy:
             plays.append(no_build_play)
         return plays
 
+    def get_legal_plays(self, color, board):
+        worker1 = color + '1'
+        worker2 = color + '2'
+        plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
+
+        original_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
+        if not original_plays:
+            original_plays = plays
+        return original_plays
+
     def get_viable_plays(self, color, board):
         worker1 = color + '1'
         worker2 = color + '2'
@@ -77,7 +87,7 @@ class Strategy:
                         # print round
                         # print next_board
                         all_winning_plays = False
-                        break;
+                        break
                 if all_winning_plays:
                     return False
                 for play in new_plays:
