@@ -41,17 +41,6 @@ class Strategy:
             plays.append(no_build_play)
         return plays
 
-
-    def get_legal_plays(self, color, board):
-        worker1 = color + '1'
-        worker2 = color + '2'
-        plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
-
-        legal_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
-        if not legal_plays:
-            return plays
-        return legal_plays
-
     def get_viable_plays(self, color, board):
         worker1 = color + '1'
         worker2 = color + '2'
