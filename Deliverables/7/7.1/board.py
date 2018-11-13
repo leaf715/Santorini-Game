@@ -1,15 +1,17 @@
 import copy
 
+
 class Position:
     def __init__(self, row, col):
         self.row = row
         self.col = col
 
     def __str__(self):
-        return 'row: '+ str(self.row) + ' col: ' + str(self.col)
+        return 'row: ' + str(self.row) + ' col: ' + str(self.col)
 
     def __eq__(self, other):
         return isinstance(other, Position) and other.row == self.row and other.col == self.col
+
 
 class Board:
     DOME_HEIGHT = 4
@@ -28,7 +30,7 @@ class Board:
         self._parse_board(game_board)
 
     def __str__(self):
-        return reduce(lambda x, y: x+str(y)+'\n', self._format_board(), '')
+        return reduce(lambda x, y: x + str(y) + '\n', self._format_board(), '')
 
     def move_worker(self, worker, direction):
         pos = self._get_new_pos(worker, direction)
@@ -72,7 +74,7 @@ class Board:
     def _get_new_pos(self, worker, direction):
         dir_coords = self.DIRECTION_MAP[direction]
         curr_pos = self.worker_locations[worker]
-        new_pos = Position(curr_pos.row+dir_coords.row, curr_pos.col+dir_coords.col)
+        new_pos = Position(curr_pos.row + dir_coords.row, curr_pos.col + dir_coords.col)
         return new_pos
 
     def _parse_board(self, board):
@@ -84,7 +86,7 @@ class Board:
                     worker_locations[worker_name] = Position(i, j)
 
         height_grid = map(lambda row:
-            map(lambda cell: cell[0] if isinstance(cell, list) else cell, row), board)
+                          map(lambda cell: cell[0] if isinstance(cell, list) else cell, row), board)
         self.worker_locations = worker_locations
         self.height_grid = height_grid
 
