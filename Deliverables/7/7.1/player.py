@@ -57,6 +57,9 @@ class Player:
                                     return False
                                 if len(lst) != 5:
                                     return False
+                                for cell in lst:
+                                    if not isinstance(cell, (list, int)):
+                                        return False
                             return True
         if input[0] == 'Play':
             if len(input) == 2:
@@ -67,6 +70,9 @@ class Player:
                                 return False
                             if len(lst) != 5:
                                 return False
+                            for cell in lst:
+                                if not isinstance(cell, (list, int)):
+                                    return False
                         return True
         if input[0] == 'Game Over':
             if len(input) == 2:

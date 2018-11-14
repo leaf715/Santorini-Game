@@ -60,6 +60,8 @@ class RuleChecker:
             for cell in row:
                 if cell < 0 or cell > 4:
                     return False
+                if not isinstance(cell, (int,)):
+                    return False
         for worker in board.worker_locations.keys():
             if board._get_cell_height(board.worker_locations[worker]) > 3:
                 return False
