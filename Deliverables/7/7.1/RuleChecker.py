@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 from board import Board
 import copy
-import numpy as np
 
 
 class Play:
@@ -32,7 +31,12 @@ class RuleChecker:
 
         if len(board.worker_locations) != 0 and len(board.worker_locations) != 2:
             return False
-        if np.sum(board.height_grid) != 0:
+        grid = board.height_grid
+        sum = 0
+        for row in grid:
+            for cell in row:
+                sum = sum + cell
+        if sum > 0:
             return False
         if len(board.worker_locations) == 2:
             opponent_worker_names = []

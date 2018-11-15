@@ -4,25 +4,16 @@ from strategy import Strategy
 from player import Player
 from JsonParser import JsonParser
 import socket
+import select
 
 class ProxyPlayer:
 
-    def __init__(self):
-        self.player = Player()
-        self.parser = JsonParser()
+    def __init__(self, socket):
+        self.client = socket
 
-    def connect(self,ip,port):
-        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client.connect((ip, port))
-        client.send(self.player.execute(['Register']))
-        while True:
-            json_msg = client.recv(1024)
-            if not json_msg:
-                break
-            msg = json.loads(json_msg)
-            rsp = self.player.execute(msg)
-            client.send(json.dumps(rsp))
-            if rsp == self.player.error_message:
-                break
-
-        client.close()
+    def send_msg(self,response):
+        read, write, error = select.select([],[self.client],[])
+        write[0].send(response)
+        read, write, error = select.select([self.client],[],[])
+        msg = read[0].recv(4096)
+        return msg
