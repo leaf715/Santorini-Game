@@ -13,6 +13,7 @@ class PlayerTestHarness:
 
   def main(self):
     commands = self.parser.parse_stream(sys.stdin)
+    print commands
     player = Player()
     play_outputs = map(lambda command: player.execute(command),commands)
     for output in play_outputs:

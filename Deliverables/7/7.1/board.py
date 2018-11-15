@@ -12,6 +12,13 @@ class Position:
     def __eq__(self, other):
         return isinstance(other, Position) and other.row == self.row and other.col == self.col
 
+    def near(self, other):
+        if abs(self.row - other.row) > 1:
+            return False
+        if abs(self.col - other.col) > 1:
+            return False
+        return True
+
 
 class Board:
     DOME_HEIGHT = 4

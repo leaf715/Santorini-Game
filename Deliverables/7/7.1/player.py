@@ -18,7 +18,6 @@ class Player:
         command = input[0]
         if not self.check_input(input):
             return self.error_message()
-        print "here"
         if command == 'Register' and self.game_state == 0:
             self.game_state = 1
             return 'Kanye'
@@ -29,7 +28,8 @@ class Player:
             if not self.RuleChecker.validate_initial_board(b, self.color):
                 return self.error_message()
             self.game_state = 2
-            return self.place_workers(b)
+            posns = self.place_workers(b)
+            return posns
         if command == 'Play' and self.game_state == 2:
             b = Board(input[1])
             if not self.is_possible_board(b):
@@ -105,47 +105,45 @@ class Player:
 
     def is_possible_board(self, b):
         opponent_possible_boards = []
-        l_board = Board(self.last_board)
-        opponent_color = self.strategy._opponent_color(self.color)
-        my_possible_boards = self.strategy.generate_boards(l_board, self.color)
-        for board in my_possible_boards:
-            opponent_possible_boards.append(self.strategy.generate_boards(board, opponent_color))
-        # print opponent_possible_boards
-        # print " kajsflkjaslfkdj"
-        # print b
-        print len(opponent_possible_boards)
-        for check in opponent_possible_boards:
-            for check2 in check:
-                print check2
-
-                if check2 == b:
-                    return True
-        return False
-
-
-BOARD2 = [[[0, 'blue1'], 0, 0, 0, [0, 'white1']],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [[0, 'white2'], 0, 0, 0, [0, 'blue2']]]
-BOARD3 = [[1, [0, 'blue1'], 0, 0, [0, 'white1']],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0],
-          [1, [0, 'white2'], 0, 0, [0, 'blue2']]]
-
-INIT_BOARD1 = [[0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0]]
-p = Player()
-p.execute(['Register'])
-
-p.execute(['Place', 'white', INIT_BOARD1])
-p.last_board = BOARD2
-print "play"
-# print p.check_input(['Play', BOARD3])
-print p.is_possible_board(BOARD3)
-# print p.execute(['Play', BOARD3])
-# check_input(['Play', self.BOARD2])
+        l_board = self.last_board
+        if len(l_board.worker_locations.keys())<2:
+            grid = b.height_grid
+            for row in grid:
+                for cell in row:
+                    if cell > 0:
+                        return False
+            return True
+        if len(l_board.worker_locations.keys())<4:
+            grid = b.height_grid
+            sum = 0
+            for row in grid:
+                for cell in row:
+                    sum = sum + cell
+            if sum == 1:
+                return True
+            return False
+        oldgrid = l_board.height_grid;
+        newgrid = b.height_grid;
+        oldworkers = l_board.worker_locations;
+        newworkers = b.worker_locations;
+        heightchange = []
+        movedworkers = []
+        for i in range(len(oldgrid)):
+            for j in range (len(oldgrid[0])):
+                if oldgrid[i][j] != newgrid[i][j]:
+                    if newgrid[i][j] - oldgrid[i][j] != 1:
+                        return False
+                    heightchange.append(Position(i,j))
+        if len(heightchange) > 2:
+            return False
+        for worker in oldworkers.keys():
+            if oldworkers[worker] != newworkers[worker]:
+                if not oldworkers[worker].near(newworkers[worker]):
+                    return False
+                movedworkers.append(worker)
+        found = 0
+        for worker in movedworkers:
+            newpos = newworkers[worker]
+            if newpos.near(heightchange[0]) or newpos.near(heightchange[1]):
+                found = found + 1
+        return found >= 2
