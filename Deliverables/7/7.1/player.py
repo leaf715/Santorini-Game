@@ -117,7 +117,8 @@ class Player:
         for check in opponent_possible_boards:
             for check2 in check:
                 print check2
-                if check2 is b:
+
+                if check2 == b:
                     return True
         return False
 
