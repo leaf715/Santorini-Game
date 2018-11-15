@@ -2,6 +2,7 @@ from board import Board, Position
 from RuleChecker import RuleChecker, Play
 import json
 
+
 class Strategy:
 
     def __init__(self):
@@ -66,24 +67,26 @@ class Strategy:
         return good_plays
 
     def check_future_loss(self, color, board, round):
-        if self.game_over(board,color):
+        if self.game_over(board, color):
             return False
         enemy_worker1 = self._opponent_color(color) + '1'
         enemy_worker2 = self._opponent_color(color) + '2'
-        opponent_wins = self._worker_will_win(enemy_worker1, board) or self._worker_will_win(enemy_worker2, board)
+        opponent_wins = self._worker_will_win(
+            enemy_worker1, board) or self._worker_will_win(enemy_worker2, board)
         if opponent_wins:
             return True
 
         round = round + 1
         if round <= self.rounds:
-            new_boards = self.generate_opponent_boards(board, color)
+            new_boards = self.generate_boards(board, self._opponent_color(color))
             for b in new_boards:
-                plays = self._all_possible_plays(color+'1', b) + self._all_possible_plays(color+'2', b)
+                plays = self._all_possible_plays(color + '1', b) + \
+                    self._all_possible_plays(color + '2', b)
                 new_plays = filter(lambda p: self.rules.is_valid_play(b, p), plays)
                 all_winning_plays = True
                 for play in new_plays:
                     next_board = play.resulting_board(b)
-                    if not self.game_over(next_board,color):
+                    if not self.game_over(next_board, color):
                         # print round
                         # print next_board
                         all_winning_plays = False
@@ -96,10 +99,9 @@ class Strategy:
                         return True
         return False
 
-
-    def generate_opponent_boards(self, board, color):
-        worker1 = self._opponent_color(color) + '1'
-        worker2 = self._opponent_color(color) + '2'
+    def generate_boards(self, board, color):
+        worker1 = color + '1'
+        worker2 = color + '2'
         plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
         new_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
         boards = []
@@ -107,12 +109,12 @@ class Strategy:
             boards.append(play.resulting_board(board))
         return boards
 
-    def game_over(self, board,color):
-        workers = [color+'1',color+'2']
+    def game_over(self, board, color):
+        workers = [color + '1', color + '2']
         for worker in workers:
             if board.get_worker_height(worker) == 3:
                 return True
         return False
 
 
-#pytest
+# pytest
