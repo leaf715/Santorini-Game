@@ -1,7 +1,7 @@
 from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
-from player import player
+from player import Player
 from JsonParser import JsonParser
 import socket
 
