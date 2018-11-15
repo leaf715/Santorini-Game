@@ -30,10 +30,7 @@ class Player:
             if not self.RuleChecker.validate_board(b):
                 return self.error_message()
             play_options = self.get_plays(b)
-            if play_options:
-                return play_options[0]
-            play_options = self.strategy.get_legal_plays(self.color,b)
-            return play_options[0]
+            return play_options
         if command == 'Game Over' and self.game_state == 2:
             self.game_state = 3
             return 'OK'
