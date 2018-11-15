@@ -63,7 +63,7 @@ class RuleChecker:
                 if not isinstance(cell, (int,)):
                     return False
         for worker in board.worker_locations.keys():
-            if board._get_cell_height(board.worker_locations[worker]) > 3:
+            if board._get_cell_height(board.worker_locations[worker]) >= 3:
                 return False
         if len(board.worker_locations) != 4:
             return False
