@@ -10,18 +10,20 @@ import select
 
 def main():
     player = Player()
-    print("driver")
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(('', 8000))
-    print('connected')
     while True:
         read, write, error = select.select([client],[],[])
         json_msg = read[0].recv(4096)
-        print(json_msg)
+        if not json_msg:
+            break
         msg = json.loads(json_msg)
+        # print(msg)
+        # print("sup")
         rsp = player.execute(msg)
+        # print(rsp)
         read, write, error = select.select([],[client],[])
-        write[0].sendall(bytes(json.dumps(response), 'utf-8'))
+        write[0].sendall(bytes(json.dumps(rsp)))
         if rsp == player.error_message():
             break
 

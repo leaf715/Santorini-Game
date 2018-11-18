@@ -1,7 +1,10 @@
 from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
-
+try:
+  basestring
+except NameError:
+  basestring = str
 
 class Player:
 
@@ -38,14 +41,20 @@ class Player:
             if not self.RuleChecker.validate_board(b):
                 return self.error_message()
             play_options = self.get_plays(b)
-            if play_options:
-                return play_options[0]
-            play_options = self.strategy.get_legal_plays(self.color, b)
-            return play_options[0]
+            return self.format_plays(play_options)
         if command == 'Game Over' and self.game_state == 2:
             self.game_state = 3
             return 'OK'
         return self.error_message()
+
+    def format_plays(self, plays):
+        listplays = []
+        for play in plays:
+            listplay = [play.worker,play.move_direction]
+            if play.build_direction:
+                listplay.append(play.build_direction)
+            listplays.append(listplay)
+        return listplays
 
     def check_input(self, input):
         if not input:
@@ -57,7 +66,7 @@ class Player:
                 return True
         if input[0] == 'Place':
             if len(input) == 3:
-                if isinstance(input[1], (basestring,)):
+                if isinstance(input[1], (basestring,str)):
                     if isinstance(input[2], (list,)):
                         if len(input[2]) == 5:
                             for lst in input[2]:
@@ -84,7 +93,7 @@ class Player:
                         return True
         if input[0] == 'Game Over':
             if len(input) == 2:
-                if isinstance(input[1], (basestring,)):
+                if isinstance(input[1], (basestring,str)):
                     return True
         return False
 
@@ -144,6 +153,10 @@ class Player:
         found = 0
         for worker in movedworkers:
             newpos = newworkers[worker]
-            if newpos.near(heightchange[0]) or newpos.near(heightchange[1]):
+            if newpos.near(heightchange[0]):
+                heightchange[0] = heightchange[1]
                 found = found + 1
-        return found >= 2
+            elif newpos.near(heightchange[1]):
+                heightchange[1] = heightchange[0]
+                found = found + 1
+        return found == 2

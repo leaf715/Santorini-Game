@@ -13,7 +13,9 @@ class ProxyPlayer:
 
     def send_msg(self,response):
         read, write, error = select.select([],[self.client],[])
-        write[0].send(response)
+        write[0].send(bytes(response))
         read, write, error = select.select([self.client],[],[])
         msg = read[0].recv(4096)
+        if not msg:
+            msg = ''
         return msg
