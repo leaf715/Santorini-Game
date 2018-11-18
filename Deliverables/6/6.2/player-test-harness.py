@@ -5,6 +5,7 @@ import json
 from JsonParser import JsonParser
 from player import Player
 from board import Board
+from player-proxy import ProxyPlayer
 
 class PlayerTestHarness:
   def __init__(self):
