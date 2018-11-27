@@ -134,30 +134,3 @@ class Player:
                     return True
         print b
         return False
-
-
-# BOARD2 = [[[0, 'blue1'], 0, 0, 0, [0, 'white1']],
-#           [0, 0, 0, 0, 0],
-#           [0, 0, 0, 0, 0],
-#           [0, 0, 0, 0, 0],
-#           [[0, 'white2'], 0, 0, 0, [0, 'blue2']]]
-#
-#
-# BOARD3 = [[1, [0, 'blue1'], 0, 0, [0, 'white1']],
-#           [0, 0, 0, 0, 0],
-#           [0, 0, 0, 0, 0],
-#           [0, 0, 0, 0, 0],
-#           [1, [0, 'white2'], 0, 0, [0, 'blue2']]]
-# INIT_BOARD1 = [[0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0]]
-# p = Player()
-# p.execute(['Register'])
-# p.execute(['Place', 'white', INIT_BOARD1])
-# print p.color
-# p.last_board = BOARD2
-# print "play"
-# # print p.check_input(['Play', BOARD3])
-# print p.is_possible_board(BOARD3)
