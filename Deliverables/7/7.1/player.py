@@ -151,6 +151,10 @@ class Player:
                     return False
                 movedworkers.append(worker)
         found = 0
+        if len(movedworkers) > 2:
+            return False
+        if movedworkers[0][:-1] == movedworkers[1][:-1]:
+            return False
         for worker in movedworkers:
             newpos = newworkers[worker]
             if newpos.near(heightchange[0]):
