@@ -39,6 +39,9 @@ class Board:
     def __str__(self):
         return reduce(lambda x, y: x + str(y) + '\n', self._format_board(), '')
 
+    def __eq__(self, other):
+        return self.worker_locations == other.worker_locations and self.height_grid == other.height_grid
+
     def move_worker(self, worker, direction):
         pos = self._get_new_pos(worker, direction)
         self.worker_locations[worker] = pos

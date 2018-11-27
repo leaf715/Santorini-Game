@@ -36,6 +36,11 @@ class TestRuleChecker(unittest.TestCase):
                    [0, 0, 0, 0, 0],
                    [0, 0, 0, 0, 0],
                    [[0, 'white2'], 0, 0, 0, [0, 'blue2']]]
+    GAME_BOARD4 = [[1, [0, 'blue1'], 0, 0, [0, 'white1']],
+                   [0, 0, 0, 0, 0],
+                   [0, 0, 4, 0, 0],
+                   [0, 0, 0, 0, 0],
+                   [1, [0, 'white2'], 0, 0, [0, 'blue2']]]
 
     def setUp(self):
         self.player = Player()
@@ -85,6 +90,9 @@ class TestRuleChecker(unittest.TestCase):
 
     def test_execute(self):
         self.assertEqual(self.player.execute(['Register']), 'Kanye')
+        self.player.color = "white"
+        self.player.last_board = Board(self.GAME_BOARD2)
+        self.assertFalse(self.player.is_possible_board(Board(self.GAME_BOARD4)))
 
 
 unittest.main()
