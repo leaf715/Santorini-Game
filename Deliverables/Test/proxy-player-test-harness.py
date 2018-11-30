@@ -20,11 +20,11 @@ class PlayerTestHarness:
     admin.bind(('',8000))
     admin.listen(5)
     client, ip = admin.accept()
-    player = ProxyPlayer(client)
+    proxy = ProxyPlayer(client)
     outputs = []
-    outputs = [player.execute(['Register'])]
+    outputs = [proxy.send_msg(json.dumps(['Register']))]
     for command in commands:
-        output = player.execute(command)
+        output = proxy.send_msg(json.dumps(command))
         if output:
             outputs.append(output)
     admin.close()

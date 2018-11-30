@@ -2,10 +2,9 @@ from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
 try:
-    basestring
+  basestring
 except NameError:
-    basestring = str
-
+  basestring = str
 
 class Player:
 
@@ -26,15 +25,13 @@ class Player:
             self.game_state = 1
             return 'Kanye'
         if command == 'Place' and self.game_state == 1:
-            self.color = str(input[1])
+            self.color = input[1]
             b = Board(input[2])
             self.last_board = b
             if not self.RuleChecker.validate_initial_board(b, self.color):
                 return self.error_message()
             self.game_state = 2
             posns = self.place_workers(b)
-            self.last_board.worker_locations[self.color + '1'] = Position(posns[0][0], posns[0][1])
-            self.last_board.worker_locations[self.color + '2'] = Position(posns[1][0], posns[1][1])
             return posns
         if command == 'Play' and self.game_state == 2:
             b = Board(input[1])
@@ -44,14 +41,7 @@ class Player:
             if not self.RuleChecker.validate_board(b):
                 return self.error_message()
             play_options = self.get_plays(b)
-            if play_options:
-                return self.format_plays(play_options)[0]
-            else:
-                play_options = self.strategy.get_legal_plays(self.color,b)
-                if play_options:
-                    return self.format_plays(play_options)[0]
-                else:
-                    return []
+            return self.format_plays(play_options)
         if command == 'Game Over' and self.game_state == 2:
             self.game_state = 3
             return 'OK'
@@ -60,7 +50,7 @@ class Player:
     def format_plays(self, plays):
         listplays = []
         for play in plays:
-            listplay = [play.worker, play.move_direction]
+            listplay = [play.worker,play.move_direction]
             if play.build_direction:
                 listplay.append(play.build_direction)
             listplays.append(listplay)
@@ -76,7 +66,7 @@ class Player:
                 return True
         if input[0] == 'Place':
             if len(input) == 3:
-                if isinstance(input[1], (basestring, str)):
+                if isinstance(input[1], (basestring,str)):
                     if isinstance(input[2], (list,)):
                         if len(input[2]) == 5:
                             for lst in input[2]:
@@ -103,7 +93,7 @@ class Player:
                         return True
         if input[0] == 'Game Over':
             if len(input) == 2:
-                if isinstance(input[1], (basestring, str)):
+                if isinstance(input[1], (basestring,str)):
                     return True
         return False
 
@@ -125,19 +115,52 @@ class Player:
     def is_possible_board(self, b):
         opponent_possible_boards = []
         l_board = self.last_board
-        opponent_color = self.strategy._opponent_color(self.color)
-        print opponent_color
-        my_possible_boards = self.strategy.generate_boards(l_board, self.color)
-        for board in my_possible_boards:
-            opponent_possible_boards.append(self.strategy.generate_boards(board, opponent_color))
-
-        print len(opponent_possible_boards)
-        for check in opponent_possible_boards:
-            for check2 in check:
-                if isinstance(check2, Board):
-                    print "is board"
-                    print check2
-                if check2 == b:
-                    return True
-        print b
-        return False
+        if len(l_board.worker_locations.keys())<2:
+            grid = b.height_grid
+            for row in grid:
+                for cell in row:
+                    if cell > 0:
+                        return False
+            return True
+        if len(l_board.worker_locations.keys())<4:
+            grid = b.height_grid
+            sum = 0
+            for row in grid:
+                for cell in row:
+                    sum = sum + cell
+            if sum == 1:
+                return True
+            return False
+        oldgrid = l_board.height_grid;
+        newgrid = b.height_grid;
+        oldworkers = l_board.worker_locations;
+        newworkers = b.worker_locations;
+        heightchange = []
+        movedworkers = []
+        for i in range(len(oldgrid)):
+            for j in range (len(oldgrid[0])):
+                if oldgrid[i][j] != newgrid[i][j]:
+                    if newgrid[i][j] - oldgrid[i][j] != 1:
+                        return False
+                    heightchange.append(Position(i,j))
+        if len(heightchange) > 2:
+            return False
+        for worker in oldworkers.keys():
+            if oldworkers[worker] != newworkers[worker]:
+                if not oldworkers[worker].near(newworkers[worker]):
+                    return False
+                movedworkers.append(worker)
+        found = 0
+        if len(movedworkers) > 2:
+            return False
+        if movedworkers[0][:-1] == movedworkers[1][:-1]:
+            return False
+        for worker in movedworkers:
+            newpos = newworkers[worker]
+            if newpos.near(heightchange[0]):
+                heightchange[0] = heightchange[1]
+                found = found + 1
+            elif newpos.near(heightchange[1]):
+                heightchange[1] = heightchange[0]
+                found = found + 1
+        return found == 2

@@ -44,7 +44,6 @@ class Referee:
         return self.board
     # Takes a play given to it by a player and tells the player they lose if it is
     # not a legal play and tells the other player they won
-
     def check_play(self, worker, directions):
         # checks if its valid play
         if len(directions) < 2:
