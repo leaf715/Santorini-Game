@@ -14,10 +14,10 @@ class ProxyPlayer:
 
     def execute(self,response):
         rsp = json.dumps(response)
-        read, write, error = select.select([],[self.client],[])
-        write[0].send(bytes(rsp))
-        read, write, error = select.select([self.client],[],[])
-        msg = read[0].recv(4096)
+        # read, write, error = select.select([],[self.client],[])
+        self.client.send(bytes(rsp))
+        # read, write, error = select.select([self.client],[],[])
+        msg = self.client.recv(4096)
         if not msg:
             msg = ''
         return msg

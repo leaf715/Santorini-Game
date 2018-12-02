@@ -73,6 +73,23 @@ class RuleChecker:
             return False
         return True
 
+    def validate_start_board(self, last_board, board):
+        for row in board.height_grid:
+            for cell in row:
+                if cell !=0:
+                    return False
+                if not isinstance(cell, (int,)):
+                    return False
+        for worker in board.worker_locations.keys():
+            if board._get_cell_height(board.worker_locations[worker]) != 0:
+                return False
+        if len(board.worker_locations) != 4:
+            return False
+        for worker in last_board.worker_locations.keys():
+            if not last_board.worker_locations[worker] == board.worker_locations[worker]:
+                return False
+        return True
+
     def _is_valid_move(self, board, worker, direction):
         if not self._is_valid_target(board, worker, direction):
             return False
@@ -108,6 +125,5 @@ class RuleChecker:
                 return self._is_valid_no_build(board_copy, play.worker)
         else:
             return False
-
 
 rule_checker = RuleChecker()

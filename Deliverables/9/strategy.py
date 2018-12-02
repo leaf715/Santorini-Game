@@ -42,6 +42,12 @@ class Strategy:
             plays.append(no_build_play)
         return plays
 
+    def get_any_play(self, color, board):
+        worker1 = color + '1'
+        worker2 = color + '2'
+        plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
+        return plays
+
     def get_legal_plays(self, color, board):
         worker1 = color + '1'
         worker2 = color + '2'

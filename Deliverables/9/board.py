@@ -111,7 +111,7 @@ class Board:
         self.height_grid = height_grid
 
     # returns list representation of current board
-    def _format_board(self):
+    def format_board(self):
         board_copy = copy.deepcopy(self.height_grid)
         for name, pos in self.worker_locations.items():
             height = board_copy[pos.row][pos.col]

@@ -45,23 +45,15 @@ class Player:
             self.last_board = b
             if not self.RuleChecker.validate_board(b):
                 return self.error_message()
-            play_options = self.get_plays(b)
-            if play_options:
-                index = random.randint(0,len(play_options)-1)
-                playmade = self.format_plays(play_options)[index]
-            else:
-                play_options = self.strategy.get_legal_plays(self.color,b)
-                if play_options:
-                    index = random.randint(0,len(play_options)-1)
-                    playmade = self.format_plays(play_options)[index]
-                else:
-                    playmade = []
+            play_options = self.strategy.get_any_play(self.color,b)
+            index = random.randint(0,len(play_options)-1)
+            playmade = self.format_plays(play_options)[index]
             if playmade:
                 if len(playmade) == 3:
                     Playmade = Play(playmade[0],playmade[1],playmade[2])
                 else:
                     Playmade = Play(playmade[0],playmade[1])
-                self.last_board = Playmade.resulting_board(self.last_board);
+                # self.last_board = Playmade.resulting_board(self.last_board);
             return playmade
         if command == 'Game Over':
             self.game_state = 0
@@ -137,14 +129,15 @@ class Player:
         return 'Santorini is broken! Too many tourists in such a small place...'
 
     def is_possible_board(self, b):
-        opponent_possible_boards = []
-        l_board = self.last_board
-        if len(l_board.worker_locations) < 4:
-            return self.RuleChecker.validate_start_board(l_board, b)
-        opponent_color = self.strategy._opponent_color(self.color)
-        opponent_possible_boards = self.strategy.generate_boards(l_board, opponent_color)
-        for check in opponent_possible_boards:
-            if isinstance(check, Board):
-                if check == b:
-                    return True
-        return False
+        return True
+        # opponent_possible_boards = []
+        # l_board = self.last_board
+        # if len(l_board.worker_locations) < 4:
+        #     return self.RuleChecker.validate_start_board(l_board, b)
+        # opponent_color = self.strategy._opponent_color(self.color)
+        # opponent_possible_boards = self.strategy.generate_boards(l_board, opponent_color)
+        # for check in opponent_possible_boards:
+        #     if isinstance(check, Board):
+        #         if check == b:
+        #             return True
+        # return False

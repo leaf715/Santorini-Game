@@ -4,31 +4,64 @@ from board import Board, Position
 from player import Player
 # The referee determines the validity of moves using the Rule_Checker
 from RuleChecker import Play, RuleChecker
+import json
 
 
 class Referee:
     # The referee stores references to the players and contains a rule_checker
     # object so it knows what plays are valid and what are not
-    def __init__(self):
+    def __init__(self, player1, player2):
         self.rule_checker = RuleChecker()
         self.turn = 'blue'
-        self.name_to_color = {}
+        self.p1 = player1
+        self.p2 = player2
+        self.color_to_name = {}
+        self.p1name = self.p1.execute(['Register'])
+        self.p2name = self.p2.execute(['Register'])
+        self.color_to_name['blue'] = self.p1name
+        self.color_to_name['white'] = self.p2name
         self.board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
                             [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
-    def create_player(self, name):
-        if self.turn == 'blue':
-            self.p1 = Player(self.turn, name)
-            self.name_to_color['blue'] = name
-            self.turn = 'white'
-            return 'blue'
-        else:
-            self.p2 = Player(self.turn, name)
-            self.name_to_color['white'] = name
-            self.turn = 'blue'
-            return 'white'
+    def run_game(self):
+        result = self.placement(self.p1)
+        if isinstance(result, (basestring, str)):
+            return [self.winnerbycheating, 'cheating']
+        self.board = result
+        result = self.placement(self.p2)
+        if isinstance(result, (basestring, str)):
+            return [self.winnerbycheating(), 'cheating']
+        self.board = result
+        print self.color_to_name
+        while True:
+            if self.turn == 'blue':
+                rsp = self.p1.execute(['Play', self.board.format_board()])
+            if self.turn == 'white':
+                rsp = self.p2.execute(['Play', self.board.format_board()])
+            # print rsp
+            rsp = json.loads(rsp)
+            if isinstance (rsp, (basestring, str)):
+                self.p1.execute(['Game Over',self.winnerbycheating()])
+                self.p2.execute(['Game Over',self.winnerbycheating()])
+                return [self.winnerbycheating(), 'cheating']
+            result = self.check_play(rsp[0], rsp[1:])
+            if isinstance (result, (list,)):
+                self.p1.execute(['Game Over',rsp[0]])
+                self.p2.execute(['Game Over',rsp[0]])
+                return result
+            if isinstance(result, (basestring, str)):
+                self.p1.execute(['Game Over',self.winnerbycheating()])
+                self.p2.execute(['Game Over',self.winnerbycheating()])
+                return [self.winnerbycheating(), 'cheating']
+            self.board = result
 
-    def placement(self, coord1, coord2):
+    def placement(self, p):
+        rsp = p.execute(['Place', self.turn, self.board.format_board()])
+        coords = json.loads(rsp)
+        if isinstance(coords, (basestring,str)):
+            return self._opponent_wins(self.turn)
+        coord1 = coords[0]
+        coord2 = coords[1]
         worker1 = self.turn + '1'
         worker2 = self.turn + '2'
         worker1_Pos = Position(coord1[0], coord1[1])
@@ -42,6 +75,7 @@ class Referee:
         self.board.worker_locations[worker2] = worker2_Pos
         self.turn = self._opponent_color(self.turn)
         return self.board
+
     # Takes a play given to it by a player and tells the player they lose if it is
     # not a legal play and tells the other player they won
     def check_play(self, worker, directions):
@@ -60,7 +94,7 @@ class Referee:
             self.turn = self._opponent_color(self.turn)
             return self.board
         else:
-            return self.name_to_color[self.turn]
+            return [self.color_to_name[self.turn]]
 
     def get_player_color(self, play):
         return play.worker[: -1]
@@ -72,4 +106,12 @@ class Referee:
 
     def _opponent_wins(self, color):
         winner_color = self._opponent_color(color)
-        return self.name_to_color[winner_color]
+        return self.color_to_name[winner_color]
+
+    def winnerbycheating(self):
+        return self.color_to_name[self._opponent_color(self.turn)]
+
+    def get_loser(self, name):
+        if self.color_to_name['white'] == name:
+            return self.color_to_name['blue']
+        return self.color_to_name['white']

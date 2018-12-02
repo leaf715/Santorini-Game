@@ -6,10 +6,13 @@ from JsonParser import JsonParser
 import json
 import socket
 import select
+import random
+import string
 
 
 def main():
     player = Player()
+    player.name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cfg_file = open('santorini.config', 'r')
     cfg = json.loads(cfg_file.read())
