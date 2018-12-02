@@ -41,10 +41,10 @@ class Santorini:
         scoreboard = {}
         for i in range(len(players)):
             for j in range(i+1,len(players)):
-                games.append([players[i],players[j]])
+                games.append([i,j])
         for game in games:
-            p1 = game[0]
-            p2 = game[1]
+            p1 = players[game[0]]
+            p2 = players[game[1]]
             ref = Referee(p1, p2)
             winner = ref.run_game();
             cheated = len(winner) == 2
@@ -53,11 +53,13 @@ class Santorini:
             # print winner
             loser = ref.get_loser(winner)
             if loser not in scoreboard.keys():
-                scoreboard[loser] = 0
-            if winner in scoreboard.keys():
-                scoreboard[winner] = scoreboard[winner] + 1
+                scoreboard[loser] = -1
             else:
+                scoreboard[loser] = scoreboard[loser] - 1
+            if winner  not in scoreboard.keys():
                 scoreboard[winner] = 1
+            else:
+                scoreboard[winner] = scoreboard[winner] + 1
             print scoreboard
     if mode == '-cup':
         rounds = math.log(len(players),2)
