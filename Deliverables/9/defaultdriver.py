@@ -12,7 +12,6 @@ import string
 
 def main():
     player = Player()
-    player.name = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5))
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     cfg_file = open('santorini.config', 'r')
     cfg = json.loads(cfg_file.read())
@@ -36,5 +35,6 @@ def main():
 
     # client.close()
 
-if __name__=="__main__":
-	main()
+
+if __name__ == "__main__":
+    main()

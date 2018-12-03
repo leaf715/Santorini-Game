@@ -7,12 +7,13 @@ import socket
 import select
 import json
 
+
 class ProxyPlayer:
 
     def __init__(self, socket):
         self.client = socket
 
-    def execute(self,response):
+    def execute(self, response):
         rsp = json.dumps(response)
         # read, write, error = select.select([],[self.client],[])
         self.client.send(bytes(rsp))
@@ -20,4 +21,8 @@ class ProxyPlayer:
         msg = self.client.recv(4096)
         if not msg:
             msg = ''
-        return msg
+        try:
+            return json.loads(msg)
+        except:
+            print msg
+            return msg

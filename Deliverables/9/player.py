@@ -47,21 +47,21 @@ class Player:
                 return self.error_message()
             play_options = self.get_plays(b)
             if play_options:
-                index = random.randint(0,len(play_options)-1)
+                index = random.randint(0, len(play_options) - 1)
                 playmade = self.format_plays(play_options)[index]
             else:
-                play_options = self.strategy.get_legal_plays(self.color,b)
+                play_options = self.strategy.get_legal_plays(self.color, b)
                 if play_options:
-                    index = random.randint(0,len(play_options)-1)
+                    index = random.randint(0, len(play_options) - 1)
                     playmade = self.format_plays(play_options)[index]
                 else:
                     playmade = []
             if playmade:
                 if len(playmade) == 3:
-                    Playmade = Play(playmade[0],playmade[1],playmade[2])
+                    Playmade = Play(playmade[0], playmade[1], playmade[2])
                 else:
-                    Playmade = Play(playmade[0],playmade[1])
-                self.last_board = Playmade.resulting_board(self.last_board);
+                    Playmade = Play(playmade[0], playmade[1])
+                self.last_board = Playmade.resulting_board(self.last_board)
             return playmade
         if command == 'Game Over':
             self.game_state = 0

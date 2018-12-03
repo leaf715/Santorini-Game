@@ -2,6 +2,7 @@ from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
 import random
+import string
 try:
     basestring
 except NameError:
@@ -16,7 +17,7 @@ class Player:
         self.starting_positions = [Position(0, 0), Position(0, 4), Position(4, 4), Position(4, 0)]
         self.RuleChecker = RuleChecker()
         self.game_state = 0
-        self.name = 'Kanye'
+        self.name = ''.join(random.choice(string.ascii_uppercase) for _ in range(5))
         self.last_board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
                                  [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
@@ -45,18 +46,18 @@ class Player:
             self.last_board = b
             if not self.RuleChecker.validate_board(b):
                 return self.error_message()
-            play_options = self.strategy.get_legal_plays(self.color,b)
+            play_options = self.strategy.get_legal_plays(self.color, b)
             if play_options:
-                index = random.randint(0,len(play_options)-1)
+                index = random.randint(0, len(play_options) - 1)
                 playmade = self.format_plays(play_options)[index]
             else:
                 playmade = []
             if playmade:
                 if len(playmade) == 3:
-                    Playmade = Play(playmade[0],playmade[1],playmade[2])
+                    Playmade = Play(playmade[0], playmade[1], playmade[2])
                 else:
-                    Playmade = Play(playmade[0],playmade[1])
-                self.last_board = Playmade.resulting_board(self.last_board);
+                    Playmade = Play(playmade[0], playmade[1])
+                self.last_board = Playmade.resulting_board(self.last_board)
             return playmade
         if command == 'Game Over':
             self.game_state = 0

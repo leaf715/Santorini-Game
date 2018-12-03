@@ -32,33 +32,31 @@ class Referee:
         if isinstance(result, (basestring, str)):
             return [self.winnerbycheating(), 'cheating']
         self.board = result
-        print self.color_to_name
         while True:
             if self.turn == 'blue':
                 rsp = self.p1.execute(['Play', self.board.format_board()])
             if self.turn == 'white':
                 rsp = self.p2.execute(['Play', self.board.format_board()])
-            # print rsp
-            rsp = json.loads(rsp)
-            if isinstance (rsp, (basestring, str)):
-                self.p1.execute(['Game Over',self.winnerbycheating()])
-                self.p2.execute(['Game Over',self.winnerbycheating()])
+
+            if isinstance(rsp, (basestring, str)):
+                self.p1.execute(['Game Over', self.winnerbycheating()])
+                self.p2.execute(['Game Over', self.winnerbycheating()])
                 return [self.winnerbycheating(), 'cheating']
             result = self.check_play(rsp[0], rsp[1:])
-            if isinstance (result, (list,)):
-                self.p1.execute(['Game Over',rsp[0]])
-                self.p2.execute(['Game Over',rsp[0]])
+            if isinstance(result, (list,)):
+                self.p1.execute(['Game Over', rsp[0]])
+                self.p2.execute(['Game Over', rsp[0]])
                 return result
             if isinstance(result, (basestring, str)):
-                self.p1.execute(['Game Over',self.winnerbycheating()])
-                self.p2.execute(['Game Over',self.winnerbycheating()])
+                self.p1.execute(['Game Over', self.winnerbycheating()])
+                self.p2.execute(['Game Over', self.winnerbycheating()])
                 return [self.winnerbycheating(), 'cheating']
             self.board = result
 
     def placement(self, p):
         rsp = p.execute(['Place', self.turn, self.board.format_board()])
-        coords = json.loads(rsp)
-        if isinstance(coords, (basestring,str)):
+        coords = rsp
+        if isinstance(coords, (basestring, str)):
             return self._opponent_wins(self.turn)
         coord1 = coords[0]
         coord2 = coords[1]
