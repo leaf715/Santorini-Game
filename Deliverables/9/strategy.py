@@ -54,8 +54,6 @@ class Strategy:
         plays = self._all_possible_plays(worker1, board) + self._all_possible_plays(worker2, board)
 
         original_plays = filter(lambda p: self.rules.is_valid_play(board, p), plays)
-        if not original_plays:
-            original_plays = plays
         return original_plays
 
     def get_viable_plays(self, color, board):

@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-python proxy-player-test-harness.py < "${1:-/dev/stdin}" & sleep 1 && python playerdriver.py

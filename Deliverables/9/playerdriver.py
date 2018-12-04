@@ -17,7 +17,6 @@ def main():
     port = cfg['port']
     client.connect((ip, port))
     while True:
-        # read, write, error = select.select([client],[],[])
         json_msg = client.recv(4096)
         if not json_msg:
             break
@@ -26,12 +25,8 @@ def main():
         # print("sup")
         rsp = player.execute(msg)
         # print(rsp)
-        # read, write, error = select.select([],[client],[])
         client.sendall(bytes(json.dumps(rsp)))
-        # if rsp == player.error_message():
-        #     break
 
-    # client.close()
 
 if __name__=="__main__":
 	main()

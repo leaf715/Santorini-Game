@@ -24,13 +24,14 @@ class Referee:
                             [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
     def run_game(self):
+        print self.color_to_name
         result = self.placement(self.p1)
         if isinstance(result, (basestring, str)):
-            return [self.winnerbycheating, 'cheating']
+            return [self.otherplayerwins(), 'cheating']
         self.board = result
         result = self.placement(self.p2)
         if isinstance(result, (basestring, str)):
-            return [self.winnerbycheating(), 'cheating']
+            return [self.otherplayerwins(), 'cheating']
         self.board = result
         while True:
             if self.turn == 'blue':
@@ -39,18 +40,22 @@ class Referee:
                 rsp = self.p2.execute(['Play', self.board.format_board()])
 
             if isinstance(rsp, (basestring, str)):
-                self.p1.execute(['Game Over', self.winnerbycheating()])
-                self.p2.execute(['Game Over', self.winnerbycheating()])
-                return [self.winnerbycheating(), 'cheating']
+                self.p1.execute(['Game Over', self.otherplayerwins()])
+                self.p2.execute(['Game Over', self.otherplayerwins()])
+                return [self.otherplayerwins(), 'cheating']
+            if rsp == []:
+                self.p1.execute(['Game Over', self.otherplayerwins()])
+                self.p2.execute(['Game Over', self.otherplayerwins()])
+                return [self.otherplayerwins()]
             result = self.check_play(rsp[0], rsp[1:])
             if isinstance(result, (list,)):
                 self.p1.execute(['Game Over', rsp[0]])
                 self.p2.execute(['Game Over', rsp[0]])
                 return result
             if isinstance(result, (basestring, str)):
-                self.p1.execute(['Game Over', self.winnerbycheating()])
-                self.p2.execute(['Game Over', self.winnerbycheating()])
-                return [self.winnerbycheating(), 'cheating']
+                self.p1.execute(['Game Over', self.otherplayerwins()])
+                self.p2.execute(['Game Over', self.otherplayerwins()])
+                return [self.otherplayerwins(), 'cheating']
             self.board = result
 
     def placement(self, p):
@@ -106,7 +111,7 @@ class Referee:
         winner_color = self._opponent_color(color)
         return self.color_to_name[winner_color]
 
-    def winnerbycheating(self):
+    def otherplayerwins(self):
         return self.color_to_name[self._opponent_color(self.turn)]
 
     def get_loser(self, name):
