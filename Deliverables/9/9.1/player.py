@@ -2,10 +2,6 @@ from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
 import random
-try:
-    basestring
-except NameError:
-    basestring = str
 
 
 class Player:

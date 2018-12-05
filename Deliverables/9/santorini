@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-python santorini.py $@ & sleep 1 && python playerdriver.py & sleep 1 && python randomdriver.py & sleep 1 && python randomdriver.py & sleep 1 && python randomdriver.py & sleep 1 && python randomdriver.py
