@@ -17,7 +17,7 @@ class Player:
         self.starting_positions = [Position(0, 0), Position(0, 4), Position(4, 4), Position(4, 0)]
         self.RuleChecker = RuleChecker()
         self.game_state = 0
-        self.name = ''.join(random.choice(string.ascii_uppercase) for _ in range(5))
+        self.name = '16th seed'
         self.last_board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
                                  [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
@@ -58,6 +58,7 @@ class Player:
                 else:
                     Playmade = Play(playmade[0], playmade[1])
                 self.last_board = Playmade.resulting_board(self.last_board)
+                playmade = [playmade[0], [playmade[1:]]]
             return playmade
         if command == 'Game Over':
             self.game_state = 0

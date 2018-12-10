@@ -17,18 +17,20 @@ def main():
     cfg = json.loads(cfg_file.read())
     ip = cfg['IP']
     port = cfg['port']
+    port = 8888
     client.connect((ip, port))
+    print "connected"
     while True:
         json_msg = client.recv(4096)
         if not json_msg:
             break
         msg = json.loads(json_msg)
+        print (msg)
         # print(msg)
         # print("sup")
         rsp = player.execute(msg)
-        # print(rsp)
+        print(rsp)
         client.sendall(bytes(json.dumps(rsp)))
-
 
 
 if __name__ == "__main__":

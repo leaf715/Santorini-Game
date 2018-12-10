@@ -76,7 +76,7 @@ class RuleChecker:
     def validate_start_board(self, last_board, board):
         for row in board.height_grid:
             for cell in row:
-                if cell !=0:
+                if cell != 0:
                     return False
                 if not isinstance(cell, (int,)):
                     return False
@@ -125,5 +125,6 @@ class RuleChecker:
                 return self._is_valid_no_build(board_copy, play.worker)
         else:
             return False
+
 
 rule_checker = RuleChecker()
