@@ -19,14 +19,13 @@ class ProxyPlayer:
         try:
             self.client.send(bytes(rsp))
         except:
-            msg = ''
+            msg = 'Santorini is broken! Too many tourists in such a small place...'
         # read, write, error = select.select([self.client],[],[])
         try:
             msg = self.client.recv(4096)
         except:
-            msg = ''
+            msg = 'Santorini is broken! Too many tourists in such a small place...'
         try:
             return json.loads(msg)
         except:
-            print msg
             return msg

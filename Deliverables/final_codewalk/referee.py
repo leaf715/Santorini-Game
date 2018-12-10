@@ -17,13 +17,15 @@ class Referee:
         self.p2 = player2
         self.color_to_name = {}
         self.p1name = self.p1.execute(['Register'])
-        if not self.p1name:
+        if self.p1name == 'Santorini is broken! Too many tourists in such a small place...':
             self.p1connected = False
+            self.p1name = "disconnected"
         else:
             self.p1connected = True
         self.p2name = self.p2.execute(['Register'])
-        if not self.p2name:
+        if self.p2name == 'Santorini is broken! Too many tourists in such a small place...':
             self.p2connected = False
+            self.p2name = "disconnected"
         else:
             self.p2connected = True
         self.color_to_name['blue'] = self.p1name
@@ -32,6 +34,10 @@ class Referee:
                             [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
 
     def run_game(self):
+        if not self.p1connected:
+            return [self.color_to_name['white'], 'cheating']
+        if not self.p2connected:
+            return [self.color_to_name['blue'], 'cheating']
         print self.color_to_name
         result = self.placement(self.p1)
         if isinstance(result, (basestring, str)):

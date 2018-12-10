@@ -57,20 +57,6 @@ class Santorini:
             p1 = players[game[0]]
             p2 = players[game[1]]
             ref = Referee(p1, p2)
-            while not ref.p1connected or not ref.p2connected:
-                if not ref.p1connected:
-                    new_default_player = self.default_player.Player()
-                    new_default_player.name = "bot" + str(self.bot_num)
-                    self.bot_num = self.bot_num + 1
-                    players[game[0]] = new_default_player
-                if not ref.p2connected:
-                    new_default_player = self.default_player.Player()
-                    new_default_player.name = "bot" + str(self.bot_num)
-                    self.bot_num = self.bot_num + 1
-                    players[game[1]] = new_default_player
-                p1 = players[game[0]]
-                p2 = players[game[1]]
-                ref = Referee(p1, p2)
             winner = ref.run_game()
 
             cheated = len(winner) == 2
@@ -135,20 +121,6 @@ class Santorini:
             for i in range(len(players) / 2):
                 p1 = players[i * 2]
                 p2 = players[i * 2 + 1]
-                while not ref.p1connected or not ref.p2connected:
-                    if not ref.p1connected:
-                        new_default_player = self.default_player.Player()
-                        new_default_player.name = "bot" + str(self.bot_num)
-                        self.bot_num = self.bot_num + 1
-                        players[i * 2] = new_default_player
-                    if not ref.p2connected:
-                        new_default_player = self.default_player.Player()
-                        new_default_player.name = "bot" + str(self.bot_num)
-                        self.bot_num = self.bot_num + 1
-                        players[i * 2 + 1] = new_default_player
-                    p1 = players[i * 2]
-                    p2 = players[i * 2 + 1]
-                    ref = Referee(p1, p2)
                 ref = Referee(p1, p2)
                 winner = ref.run_game()
                 cheated = len(winner) == 2
@@ -183,6 +155,7 @@ class Santorini:
 
             last_v = v
             print rank, k
+
 
 if __name__ == "__main__":
     santorini = Santorini()
