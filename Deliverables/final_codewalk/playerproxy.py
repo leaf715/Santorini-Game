@@ -18,9 +18,10 @@ class ProxyPlayer:
         # read, write, error = select.select([],[self.client],[])
         self.client.send(bytes(rsp))
         # read, write, error = select.select([self.client],[],[])
-        msg = self.client.recv(4096)
-        if not msg:
-            msg = ''
+        try:
+            msg = self.client.recv(4096)
+        except:
+            msg = 'play disconnected'
         try:
             return json.loads(msg)
         except:

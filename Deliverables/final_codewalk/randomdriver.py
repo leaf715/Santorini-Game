@@ -6,8 +6,6 @@ from JsonParser import JsonParser
 import json
 import socket
 import select
-import random
-import string
 
 
 def main():
@@ -17,7 +15,6 @@ def main():
     cfg = json.loads(cfg_file.read())
     ip = cfg['IP']
     port = cfg['port']
-    port = 8888
     client.connect((ip, port))
     print "connected"
     while True:
@@ -25,11 +22,10 @@ def main():
         if not json_msg:
             break
         msg = json.loads(json_msg)
-        print (msg)
         # print(msg)
         # print("sup")
         rsp = player.execute(msg)
-        print(rsp)
+        # print(rsp)
         client.sendall(bytes(json.dumps(rsp)))
 
 

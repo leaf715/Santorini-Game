@@ -15,7 +15,7 @@ class Player:
         self.strategy = Strategy()
         self.starting_positions = [Position(0, 0), Position(0, 4), Position(4, 4), Position(4, 0)]
         self.RuleChecker = RuleChecker()
-        self.game_state = 0
+        self.game_state = 'start'
         self.name = 'Kanye'
         self.last_board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
                                  [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
@@ -24,21 +24,21 @@ class Player:
         command = input[0]
         if not self.check_input(input):
             return self.error_message()
-        if command == 'Register' and self.game_state == 0:
-            self.game_state = 1
+        if command == 'Register' and self.game_state == 'start':
+            self.game_state = 'place'
             return self.name
-        if command == 'Place' and self.game_state == 1:
+        if command == 'Place' and self.game_state == 'place':
             self.color = str(input[1])
             b = Board(input[2])
             self.last_board = b
             if not self.RuleChecker.validate_initial_board(b, self.color):
                 return self.error_message()
-            self.game_state = 2
+            self.game_state = 'play'
             posns = self.place_workers(b)
             self.last_board.worker_locations[self.color + '1'] = Position(posns[0][0], posns[0][1])
             self.last_board.worker_locations[self.color + '2'] = Position(posns[1][0], posns[1][1])
             return posns
-        if command == 'Play' and self.game_state == 2:
+        if command == 'Play' and self.game_state == 'play':
             b = Board(input[1])
             if not self.is_possible_board(b):
                 return self.error_message()
@@ -62,9 +62,10 @@ class Player:
                 else:
                     Playmade = Play(playmade[0], playmade[1])
                 self.last_board = Playmade.resulting_board(self.last_board)
+                playmade = [playmade[0], playmade[1:]]
             return playmade
         if command == 'Game Over':
-            self.game_state = 0
+            self.game_state = 'start'
             self.last_board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],
                                      [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]])
             self.color = ''

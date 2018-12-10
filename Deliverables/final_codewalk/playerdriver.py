@@ -16,6 +16,7 @@ def main():
     ip = cfg['IP']
     port = cfg['port']
     client.connect((ip, port))
+    print "connected"
     while True:
         json_msg = client.recv(4096)
         if not json_msg:

@@ -86,7 +86,6 @@ class Referee:
         if len(directions) < 2:
             directions.append(None)
         play = Play(worker, directions[0], directions[1])
-
         is_legal = self.rule_checker.is_valid_play(self.board, play)
         if not is_legal or self.turn != self.get_player_color(play):
             return self.otherplayerwins()

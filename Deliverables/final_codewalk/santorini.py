@@ -34,6 +34,7 @@ class Santorini:
             client, ip = admin.accept()
             player = ProxyPlayer(client)
             players.append(player)
+            print 'connected a player'
         while len(players) != n_next:
             new_default_player = self.default_player.Player()
             new_default_player.name = "bot" + str(self.bot_num)

@@ -101,14 +101,11 @@ class RuleChecker:
     def _is_valid_target(self, board, worker, direction):
         return board.neighboring_cell_exists(worker, direction) and not board.is_occupied(worker, direction)
 
-    def _is_valid_build(self, board, worker, direction):
-        return self._is_valid_target(board, worker, direction)
-
     def _is_winner(self, board, worker):
         return board.get_worker_height(worker) == 3
 
     def _is_loser(self, board, worker):
-        valid_build_directions = map(lambda direction: self._is_valid_build(
+        valid_build_directions = map(lambda direction: self._is_valid_target(
             board, worker, direction), board.DIRECTION_MAP.keys())
         return not any(valid_build_directions)
 
@@ -120,7 +117,7 @@ class RuleChecker:
         if self._is_valid_move(board_copy, play.worker, play.move_direction):
             board_copy.move_worker(play.worker, play.move_direction)
             if play.build_direction:
-                return self._is_valid_build(board_copy, play.worker, play.build_direction) and not self._is_winner(board_copy, play.worker)
+                return self._is_valid_target(board_copy, play.worker, play.build_direction) and not self._is_winner(board_copy, play.worker)
             else:
                 return self._is_valid_no_build(board_copy, play.worker)
         else:
