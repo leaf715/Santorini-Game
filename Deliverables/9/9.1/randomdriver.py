@@ -1,11 +1,13 @@
 from board import Board, Position
 from RuleChecker import RuleChecker, Play
 from strategy import Strategy
-from player import Player
+from randomplayer import Player
 from JsonParser import JsonParser
 import json
 import socket
 import select
+import random
+import string
 
 
 def main():
@@ -26,6 +28,7 @@ def main():
         rsp = player.execute(msg)
         # print(rsp)
         client.sendall(bytes(json.dumps(rsp)))
+
 
 
 if __name__ == "__main__":

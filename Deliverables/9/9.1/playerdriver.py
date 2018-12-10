@@ -28,5 +28,5 @@ def main():
         client.sendall(bytes(json.dumps(rsp)))
 
 
-if __name__ == "__main__":
-    main()
+if __name__=="__main__":
+	main()
