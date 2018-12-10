@@ -16,12 +16,15 @@ class ProxyPlayer:
     def execute(self, response):
         rsp = json.dumps(response)
         # read, write, error = select.select([],[self.client],[])
-        self.client.send(bytes(rsp))
+        try:
+            self.client.send(bytes(rsp))
+        except:
+            msg = 'player disconnected'
         # read, write, error = select.select([self.client],[],[])
         try:
             msg = self.client.recv(4096)
         except:
-            msg = 'play disconnected'
+            msg = 'player disconnected'
         try:
             return json.loads(msg)
         except:

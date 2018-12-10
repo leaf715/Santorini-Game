@@ -31,6 +31,7 @@ class Santorini:
         admin.listen(5)
         players = []
         while len(players) != n:
+            admin.listen(5)
             client, ip = admin.accept()
             player = ProxyPlayer(client)
             players.append(player)
