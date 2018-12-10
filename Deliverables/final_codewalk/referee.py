@@ -17,7 +17,15 @@ class Referee:
         self.p2 = player2
         self.color_to_name = {}
         self.p1name = self.p1.execute(['Register'])
+        if not self.p1name:
+            self.p1connected = False
+        else:
+            self.p1connected = True
         self.p2name = self.p2.execute(['Register'])
+        if not self.p2name:
+            self.p2connected = False
+        else:
+            self.p2connected = True
         self.color_to_name['blue'] = self.p1name
         self.color_to_name['white'] = self.p2name
         self.board = Board([[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0],

@@ -31,7 +31,6 @@ class Santorini:
         admin.listen(5)
         players = []
         while len(players) != n:
-            admin.listen(5)
             client, ip = admin.accept()
             player = ProxyPlayer(client)
             players.append(player)
@@ -58,6 +57,20 @@ class Santorini:
             p1 = players[game[0]]
             p2 = players[game[1]]
             ref = Referee(p1, p2)
+            while not ref.p1connected and not ref.p2connected:
+                if not ref.p1connected:
+                    new_default_player = self.default_player.Player()
+                    new_default_player.name = "bot" + str(self.bot_num)
+                    self.bot_num = self.bot_num + 1
+                    players[game[0]] = new_default_player
+                if not ref.p2connected:
+                    new_default_player = self.default_player.Player()
+                    new_default_player.name = "bot" + str(self.bot_num)
+                    self.bot_num = self.bot_num + 1
+                    players[game[1]] = new_default_player
+                p1 = players[game[0]]
+                p2 = players[game[1]]
+                ref = Referee(p1, p2)
             winner = ref.run_game()
 
             cheated = len(winner) == 2
